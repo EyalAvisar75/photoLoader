@@ -54,21 +54,66 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rAc-Cn-zKP">
                                 <rect key="frame" x="182.5" y="818" width="49" height="30"/>
                                 <state key="normal" title="Upload"/>
+                                <connections>
+                                    <action selector="upload" destination="BYZ-38-t0r" eventType="touchUpInside" id="pTL-Di-URV"/>
+                                </connections>
                             </button>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="100" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="NRJ-32-YDk">
+                                <rect key="frame" x="0.0" y="72" width="414" height="323"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="sdn-lD-IgQ">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SelectedPhotoCell" id="unY-5d-X4G" customClass="SelectedPhotoCell" customModule="PhotoLoader" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="p9J-jx-clr">
+                                            <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YSd-sk-KHQ">
+                                                    <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="YSd-sk-KHQ" firstAttribute="leading" secondItem="p9J-jx-clr" secondAttribute="leading" id="FY0-dZ-3XV"/>
+                                                <constraint firstAttribute="bottom" secondItem="YSd-sk-KHQ" secondAttribute="bottom" id="IXM-lD-dSP"/>
+                                                <constraint firstItem="YSd-sk-KHQ" firstAttribute="top" secondItem="p9J-jx-clr" secondAttribute="top" id="bWv-zO-Td0"/>
+                                                <constraint firstAttribute="trailing" secondItem="YSd-sk-KHQ" secondAttribute="trailing" id="cHt-MM-0mb"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <connections>
+                                            <outlet property="selectedImageView" destination="YSd-sk-KHQ" id="qjR-nD-R4D"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="M0z-n1-KSw"/>
+                                </connections>
+                            </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="NRJ-32-YDk" firstAttribute="trailing" secondItem="yQC-Hn-BNf" secondAttribute="trailing" id="4Fi-Ou-jdS"/>
+                            <constraint firstItem="NRJ-32-YDk" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="28" id="4LZ-05-qHc"/>
                             <constraint firstItem="yQC-Hn-BNf" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="415" id="ICj-nX-nOe"/>
+                            <constraint firstItem="NRJ-32-YDk" firstAttribute="leading" secondItem="yQC-Hn-BNf" secondAttribute="leading" id="Qgd-Yl-jKU"/>
                             <constraint firstItem="yQC-Hn-BNf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VoJ-rF-NxQ"/>
                             <constraint firstItem="rAc-Cn-zKP" firstAttribute="top" secondItem="yQC-Hn-BNf" secondAttribute="bottom" constant="36" id="hcd-yQ-WG5"/>
                             <constraint firstItem="yQC-Hn-BNf" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="nr2-88-tj9"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="rAc-Cn-zKP" secondAttribute="bottom" constant="14" id="oMe-5I-CGB"/>
+                            <constraint firstItem="yQC-Hn-BNf" firstAttribute="top" secondItem="NRJ-32-YDk" secondAttribute="bottom" constant="64" id="tdS-jk-53R"/>
                             <constraint firstItem="yQC-Hn-BNf" firstAttribute="centerX" secondItem="rAc-Cn-zKP" secondAttribute="centerX" id="v3d-lC-aps"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="libraryPhotosCollection" destination="yQC-Hn-BNf" id="fGR-P7-C0J"/>
+                        <outlet property="containerCollection" destination="NRJ-32-YDk" id="eSr-ie-46E"/>
+                        <outlet property="libraryPhotosCollection" destination="yQC-Hn-BNf" id="aaR-rk-rfD"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

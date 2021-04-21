@@ -10,17 +10,19 @@ import Photos
 
 class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     //MARK:- IBOutlets
-//    @IBOutlet weak var containerCollection: UICollectionView!
+    @IBOutlet weak var containerCollection: UICollectionView!
     
     @IBOutlet weak var libraryPhotosCollection: UICollectionView!
     
     //MARK:- properties
-    private var images = [PHAsset]()
-    private var selectedImages = [PHAsset]()
+    
+    var selectedImages = [UIImage]()
+    var images = [UIImage]()
 
     
     //MARK:- Collection delegate and datasource
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("images count", images.count)
         if collectionView.tag == 100 {
             return selectedImages.count
         }
@@ -28,43 +30,28 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         if collectionView.tag == 100 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "SelectedPhotoCell", for: indexPath) as! SelectedPhotoCell
             
-            let asset = images[indexPath.row]
-            let manager = PHImageManager.default()
-            
-            manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFit, options: nil) { (image, _) in
-
-                DispatchQueue.main.async {
-                    cell.selectedImageView.image = image
-                }
-            }
+            cell.selectedImageView.image = selectedImages[indexPath.row]
+                
             return cell
         }
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCollectionViewCell", for: indexPath) as! PhotoCollectionViewCell
         
-        let asset = images[indexPath.row]
-        let manager = PHImageManager.default()
-        manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFit, options: nil) { (image, _) in
-
-            DispatchQueue.main.async {
-                cell.photoImageView.image = image
-            }
-        }
+        cell.photoImageView.image = images[indexPath.row]
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        print(indexPath.row)
         selectedImages.append(images[indexPath.row])
-//        containerCollection.reloadData()
+        containerCollection.reloadData()
     }
     
 
+    //MARK:- View methods
     override func viewDidLoad() {
         super.viewDidLoad()
         libraryPhotosCollection.dataSource = self
@@ -74,24 +61,37 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
 
     }
 
+    //MARK:- Helper methods
     func populatePhotos() {
         PHPhotoLibrary.requestAuthorization { [weak self] status in
             
             if status == .authorized {
                 let assets = PHAsset.fetchAssets(with: .image, options: nil)
                 
+                print("assets", assets)
                 assets.enumerateObjects { (object, _, _) in
-                    self?.images.append(object)
+                    
+                    var myImage = UIImage()
+                    let manager = PHImageManager.default()
+                    let option = PHImageRequestOptions()
+                    option.isSynchronous = true
+                    manager.requestImage(for: object, targetSize: CGSize(width: 100,height: 100), contentMode: .aspectFit, options: option) { (image, _) in
+                        myImage = image!
+                        self?.images.append(myImage)
+                    }
                 }
                 
-//                self?.images.reverse()
                 
                 DispatchQueue.main.async {
                     self?.libraryPhotosCollection.reloadData()
-//                    self?.containerCollection.reloadData()
                 }
             }
         }
+    }
+    
+    @IBAction func upload() {
+        selectedImages = images
+        containerCollection.reloadData()
     }
     
 }
