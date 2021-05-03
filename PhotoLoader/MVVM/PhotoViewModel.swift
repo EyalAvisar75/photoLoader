@@ -26,7 +26,6 @@ class PhotoViewModel: NSObject {
     
     func getPhotos() {
         apiService.apiToGetPhotos() { photos in
-            print(photos)
             self.photos = photos
         }
     }

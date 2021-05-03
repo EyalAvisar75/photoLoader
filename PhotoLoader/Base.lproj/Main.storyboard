@@ -165,6 +165,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1k4-On-OeF">
                                 <rect key="frame" x="182.5" y="818" width="49" height="30"/>
                                 <state key="normal" title="Upload"/>
+                                <connections>
+                                    <action selector="upload" destination="kO8-0b-TOP" eventType="touchUpInside" id="Rf2-tz-5wc"/>
+                                </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="100" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="mcx-lh-Hox">
                                 <rect key="frame" x="0.0" y="72" width="414" height="323"/>
@@ -199,6 +202,9 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="kO8-0b-TOP" id="It2-Xq-dxo"/>
+                                </connections>
                             </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Fzu-bh-2Qf"/>
@@ -217,7 +223,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="photosCollection" destination="Q49-ix-hB6" id="4g0-6c-Ur5"/>
+                        <outlet property="containerCollection" destination="mcx-lh-Hox" id="dS9-p0-FiC"/>
+                        <outlet property="photosCollection" destination="Q49-ix-hB6" id="aWk-5U-jOB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kua-Ad-cnI" sceneMemberID="firstResponder"/>

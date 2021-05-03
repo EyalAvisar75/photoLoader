@@ -12,7 +12,8 @@ import Photos
 
 struct MVPhoto {
     var image = UIImage()
-    var url = URL(fileURLWithPath: "")
+    var url = URL(string: "")
+    var isUploaded = false
 }
 
 struct MVPhotos {

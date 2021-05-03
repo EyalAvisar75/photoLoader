@@ -9,7 +9,9 @@ import Foundation
 import Photos
 
 class APIService: NSObject {
+    
     func apiToGetPhotos(completion: @escaping (MVPhotos)->()) {
+        
         var photos = MVPhotos(photos: [])
         
         PHPhotoLibrary.requestAuthorization {
@@ -18,17 +20,18 @@ class APIService: NSObject {
             if status == .authorized {
                 let assets = PHAsset.fetchAssets(with: .image, options: nil)
                 
-                assets.enumerateObjects { [self] (object, _, _) in
-                    photos.photos.append(getPhotoImage(object: object))
+                
+                assets.enumerateObjects { [self] (object, _, x) in
                     
+                    photos.photos.append(getPhotoImage(object: object))
                 }
                 completion(photos)
             }
-//            completion(photos)
         }
     }
     
     func getPhotoImage(object: PHAsset)-> MVPhoto {
+        
         var myPhoto = MVPhoto()
         let manager = PHImageManager.default()
         let option = PHImageRequestOptions()
@@ -36,7 +39,6 @@ class APIService: NSObject {
         option.isSynchronous = true
         
         manager.requestImage(for: object, targetSize: CGSize(width: 100,height: 100), contentMode: .aspectFit, options: option) { (image, info) in
-            
             myPhoto.image = image!
         }
         return myPhoto
