@@ -9,6 +9,8 @@ import UIKit
 import Firebase
 
 class ViewControllerMVVM: UIViewController {
+    
+    //MARK:- IBOUTLETS AND PROPERTIES
     @IBOutlet weak var photosCollection: UICollectionView!
     @IBOutlet weak var containerCollection: UICollectionView!
     
@@ -18,6 +20,8 @@ class ViewControllerMVVM: UIViewController {
     private var selectedImages: [MVPhoto] = []
 
     
+    //MARK:- View methods
+
     override func viewDidLoad() {
         super.viewDidLoad()
         callToViewModelForUIUpdate()
@@ -30,6 +34,23 @@ class ViewControllerMVVM: UIViewController {
         }
     }
     
+    //MARK:- IBAction methods
+
+    @IBAction func upload() {
+        
+        var index = items.count - 1
+        while items.count > 0 {
+            selectedImages.append(items[index])
+            uploadToFirebase(photo: items[index].image)
+            items.removeLast()
+            index -= 1
+        }
+        photosCollection.reloadData()
+        containerCollection.reloadData()
+    }
+
+    //MARK:- Helper methods
+
     func updateDataSource() {
 
         
@@ -41,10 +62,50 @@ class ViewControllerMVVM: UIViewController {
         }
         
     }
+    
+    func uploadToFirebase(photo: UIImage) {
+
+        guard let url = saveImage(image: photo)else {
+            print("Image has no url")
+            return
+        }
+
+        let storage = Storage.storage()
+        let storageRef = storage.reference()
+        let photoRef = storageRef.child(url.absoluteString)
+
+        photoRef.putFile(from: url, metadata: nil) { (metadata, error) in
+            guard metadata != nil else {
+                print("error:", error!.localizedDescription)
+                return
+            }
+
+            print("Photo uploaded")
+        }
+    }
+    
+    func saveImage(image: UIImage) -> URL? {
+        guard let data = image.jpegData(compressionQuality: 0.5) ?? image.pngData() else {
+            return nil
+        }
+        guard let directory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
+            return nil
+        }
+        do {
+            try data.write(to: directory.appendingPathComponent("fileName.png")!)
+            return directory.appendingPathComponent("fileName.png")
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+
 }
 
 extension ViewControllerMVVM: UICollectionViewDelegate, UICollectionViewDataSource {
     
+    //MARK:- Collection view extension
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if collectionView.tag == 100 {
@@ -91,56 +152,5 @@ extension ViewControllerMVVM: UICollectionViewDelegate, UICollectionViewDataSour
             
         }
         return false
-    }
-    
-    @IBAction func upload() {
-        
-        var index = items.count - 1
-        while items.count > 0 {
-            selectedImages.append(items[index])
-            uploadToFirebase(photo: items[index].image)
-            items.removeLast()
-            index -= 1
-        }
-        photosCollection.reloadData()
-        containerCollection.reloadData()
-    }
-    
-    
-    func uploadToFirebase(photo: UIImage) {
-
-        guard let url = saveImage(image: photo)else {
-            print("Image has no url")
-            return
-        }
-
-        let storage = Storage.storage()
-        let storageRef = storage.reference()
-        let photoRef = storageRef.child(url.absoluteString)
-
-        photoRef.putFile(from: url, metadata: nil) { (metadata, error) in
-            guard metadata != nil else {
-                print("error:", error!.localizedDescription)
-                return
-            }
-
-            print("Photo uploaded")
-        }
-    }
-    
-    func saveImage(image: UIImage) -> URL? {
-        guard let data = image.jpegData(compressionQuality: 0.5) ?? image.pngData() else {
-            return nil
-        }
-        guard let directory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
-            return nil
-        }
-        do {
-            try data.write(to: directory.appendingPathComponent("fileName.png")!)
-            return directory.appendingPathComponent("fileName.png")
-        } catch {
-            print(error.localizedDescription)
-            return nil
-        }
     }
 }
